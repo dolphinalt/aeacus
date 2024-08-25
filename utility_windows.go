@@ -94,9 +94,11 @@ func sendNotification(messageString string) {
 // speed things up, as well as some other flags) to run commands on the host
 // system and retrieve the return value.
 func rawCmd(commandGiven string) *exec.Cmd {
-	cmdInput := "powershell.exe -NonInteractive -NoProfile Invoke-Command -ScriptBlock { " + commandGiven + " }"
-	debug("rawCmd input: " + cmdInput)
-	return exec.Command("powershell.exe", "-NonInteractive", "-NoProfile", "Invoke-Command", "-ScriptBlock", "{ "+commandGiven+" }")
+    cmdInput := "powershell.exe -NonInteractive -NoProfile Invoke-Command -ScriptBlock { " + commandGiven + " }"
+    debug("rawCmd input: " + cmdInput)
+    cmd := exec.Command("powershell.exe", "-NonInteractive", "-NoProfile", "-Command", "-")
+    cmd.Stdin = bytes.NewBufferString(commandGiven)
+    return cmd
 }
 
 // playAudio plays a .wav file with the given path with PowerShell.
